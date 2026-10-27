@@ -1,0 +1,31 @@
+name: cliprag
+arch: ${GOARCH}
+platform: linux
+version: 0.1.0
+section: utils
+priority: optional
+maintainer: ClipRAG maintainers <maintainers@cliprag.local>
+description: Local developer clipboard history with rule-based categories and GNOME integration.
+contents:
+  - src: ./bin/cliprag
+    dst: /usr/bin/cliprag
+    file_info:
+      mode: 0755
+  - src: ./packaging/linux/cliprag.desktop
+    dst: /usr/share/applications/cliprag.desktop
+  - src: ./packaging/linux/cliprag.svg
+    dst: /usr/share/icons/hicolor/scalable/apps/cliprag.svg
+  - src: ./integrations/gnome-shell/extension.js
+    dst: /usr/share/gnome-shell/extensions/cliprag@cliprag.local/extension.js
+  - src: ./integrations/gnome-shell/metadata.json
+    dst: /usr/share/gnome-shell/extensions/cliprag@cliprag.local/metadata.json
+  - src: ./packaging/linux/THIRD_PARTY_NOTICES.txt
+    dst: /usr/share/doc/cliprag/THIRD_PARTY_NOTICES.txt
+depends:
+  - libgtk-4-1
+  - libwebkitgtk-6.0-4
+  - libx11-6
+  - libxfixes3
+  - dbus-user-session
+suggests:
+  - gnome-shell

@@ -1,0 +1,40 @@
+version: '3'
+vars:
+  APP_NAME: cliprag
+  BIN_DIR: bin
+  WAILS: '{{.ROOT_DIR}}/.tools/wails3'
+tasks:
+  build:
+    desc: Build the Linux desktop application
+    platforms: [linux]
+    cmds:
+      - npm run build --prefix frontend
+      - mkdir -p bin
+      - go build {{if eq .DEV "true"}}{{else}}-tags production{{end}} -trimpath -buildvcs=false -ldflags="-s -w" -o bin/cliprag ./cmd/cliprag
+  run:
+    desc: Run the built application
+    cmds:
+      - ./bin/cliprag
+  bindings:
+    desc: Regenerate typed Wails bindings
+    cmds:
+      - '{{.WAILS}} generate bindings -ts -i -names ./cmd/cliprag'
+  dev:frontend:
+    dir: frontend
+    cmds:
+      - npm run dev
+  package:
+    desc: Build and package an Ubuntu deb
+    platforms: [linux]
+    cmds:
+      - task: build
+      - '{{.WAILS}} tool package -name cliprag -format deb -config packaging/linux/nfpm.yaml -out bin'
+    env:
+      GOARCH: '{{ARCH}}'
+  test:
+    cmds:
+      - go test ./...
+      - go vet ./...
+      - npm run typecheck --prefix frontend
+      - npm run lint --prefix frontend
+      - npm test --prefix frontend

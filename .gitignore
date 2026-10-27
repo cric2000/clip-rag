@@ -1,0 +1,13 @@
+.tools/
+.cache/
+bin/
+frontend/node_modules/
+frontend/dist/
+frontend/coverage/
+*.deb
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
+*.tsbuildinfo

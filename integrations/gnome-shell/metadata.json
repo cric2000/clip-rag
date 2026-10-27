@@ -1,0 +1,7 @@
+{
+  "uuid": "cliprag@cliprag.local",
+  "name": "ClipRAG Clipboard Bridge",
+  "description": "Forwards bounded CLIPBOARD events to the local ClipRAG session service. No history, network, or paste simulation.",
+  "shell-version": ["50"],
+  "version": 1
+}

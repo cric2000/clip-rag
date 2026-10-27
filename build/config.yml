@@ -1,0 +1,26 @@
+version: '3'
+info:
+  productName: ClipRAG
+  productIdentifier: io.github.cliprag
+  description: Your developer clipboard memory.
+  version: 0.1.0
+dev_mode:
+  root_path: .
+  log_level: warn
+  debounce: 1000
+  ignore:
+    dir: [.git, .tools, frontend, bin]
+    file: ['*_test.go']
+    watched_extension: ['*.go']
+    git_ignore: true
+  executes:
+    - cmd: .tools/wails3 build DEV=true
+      type: blocking
+    - cmd: .tools/wails3 task dev:frontend
+      type: background
+      readiness:
+        http: http://127.0.0.1:9245/
+        timeout: 60s
+    - cmd: ./bin/cliprag
+      type: primary
+      exit_policy: shutdown

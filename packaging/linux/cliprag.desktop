@@ -1,0 +1,22 @@
+[Desktop Entry]
+Type=Application
+Name=ClipRAG
+Comment=Your developer clipboard memory
+Exec=cliprag --show
+Icon=cliprag
+Terminal=false
+Categories=Development;
+StartupWMClass=cliprag
+Actions=Pause;Resume;Quit;
+
+[Desktop Action Pause]
+Name=Pause monitoring
+Exec=cliprag --pause
+
+[Desktop Action Resume]
+Name=Resume monitoring
+Exec=cliprag --resume
+
+[Desktop Action Quit]
+Name=Quit ClipRAG
+Exec=cliprag --quit
