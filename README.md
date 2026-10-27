@@ -18,12 +18,39 @@ No account, cloud service or AI required.
 Supports **GNOME 50 on Wayland** and **X11**. Other Wayland desktops, macOS and
 Windows are not supported yet.
 
-## Setup and run
+## Install on Ubuntu
 
-For Ubuntu 26.04 with **Go 1.26.8+**, **Node.js 24+** and npm installed.
-Run these commands from the project root.
+For **Ubuntu 26.04 · AMD64 (64-bit Intel/AMD)**. No Go or Node.js installation needed.
 
-### 1. Install dependencies and build
+[**Download ClipRAG (.deb)**](https://github.com/cric2000/clip-rag/releases/latest/download/cliprag.deb)
+
+After downloading, open a terminal in the download folder and install:
+
+```bash
+sudo apt install ./cliprag.deb
+```
+
+### GNOME Wayland: enable the clipboard bridge once
+
+Skip this step on X11. **Save your work, log out of Ubuntu, and log back in**
+so GNOME discovers the bundled extension. Then enable it:
+
+```bash
+gnome-extensions enable cliprag@cliprag.local
+```
+
+Locking the screen or restarting ClipRAG is not enough.
+
+Open **ClipRAG** from Ubuntu’s application launcher, or run:
+
+```bash
+cliprag
+```
+
+<details>
+<summary>Build and run from source instead</summary>
+
+Requires **Go 1.26.8+**, **Node.js 24+** and npm. From the project root:
 
 ```bash
 sudo apt-get install -y build-essential pkg-config libgtk-4-dev libwebkitgtk-6.0-dev
@@ -33,30 +60,16 @@ mkdir -p bin
 go build -tags production -trimpath -buildvcs=false -o bin/cliprag ./cmd/cliprag
 ```
 
-### 2. Connect the clipboard on GNOME Wayland
-
-Skip this step on X11.
+On GNOME Wayland, install the bridge, then complete the logout/login step above:
 
 ```bash
 ./scripts/install-extension.sh
 ```
 
-**Save your work, log out of Ubuntu, and log back in once.** The extension enables
-automatically. Locking the screen or restarting ClipRAG is not enough.
+Start the source build with `./bin/cliprag`. Optionally add its launcher and icon
+with `python3 scripts/install-desktop.py`.
 
-### 3. Launch ClipRAG
-
-```bash
-./bin/cliprag
-```
-
-To add ClipRAG and its icon to Ubuntu’s application launcher, run once:
-
-```bash
-python3 scripts/install-desktop.py
-```
-
-After code changes, repeat the build commands and reopen ClipRAG.
+</details>
 
 ## Using ClipRAG
 
@@ -75,7 +88,7 @@ Search, category and Pinned filters work together. **External copies** counts co
 made in other apps; **Reused** counts copies made from ClipRAG.
 Closing the window keeps capture running. Open ClipRAG again to bring it back.
 
-If **Bridge unavailable** appears on GNOME, complete step 2 and log out/in.
+If **Bridge unavailable** appears on GNOME, complete the clipboard bridge setup above.
 To check the extension, run `gnome-extensions info cliprag@cliprag.local`.
 
 ## Storage and privacy
