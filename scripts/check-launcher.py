@@ -46,6 +46,19 @@ with tempfile.TemporaryDirectory(prefix="cliprag-launcher-") as temporary:
         subprocess.run(["./bin/cliprag", flag], env=environment, check=True,
                        timeout=10, stdout=subprocess.DEVNULL)
 
+    def check_shell_lookup():
+        lookup = subprocess.run(["./bin/cliprag-shell", "suggest", "--json"],
+                                input="git s", text=True, capture_output=True,
+                                env=environment, check=True, timeout=3)
+        assert json.loads(lookup.stdout) == ["git status"], "shell helper missed captured history"
+
+    def record_use(expected):
+        subprocess.run(["./bin/cliprag-shell", "record-use"], input="git status",
+                       text=True, capture_output=True, env=environment, check=True, timeout=3)
+        with sqlite3.connect(database) as connection:
+            row = connection.execute("SELECT autocomplete_count,copy_count,restore_count FROM entries WHERE content='git status'").fetchone()
+            assert row == (expected, 1, 0), "acceptance counter or unrelated counters incorrect"
+
     try:
         process = subprocess.Popen(["./bin/cliprag", "--hidden"], env=environment)
         wait_for(lambda: database.exists() and count() == 0, "database startup")
@@ -53,6 +66,8 @@ with tempfile.TemporaryDirectory(prefix="cliprag-launcher-") as temporary:
         time.sleep(0.8)
         external_copy("git status")
         wait_for(lambda: count() == 1, "production capture")
+        check_shell_lookup()
+        record_use(1)
         command("--pause")
         wait_for(lambda: not monitoring(), "single instance pause")
         external_copy("paused fixture")
@@ -65,12 +80,16 @@ with tempfile.TemporaryDirectory(prefix="cliprag-launcher-") as temporary:
         command("--show")
         command("--quit")
         assert process.wait(timeout=10) == 0
+        check_shell_lookup()
+        record_use(2)
         process = subprocess.Popen(["./bin/cliprag", "--hidden"], env=environment)
         time.sleep(0.8)
         assert count() == 2, "history lost on process restart"
+        with sqlite3.connect(database) as connection:
+            assert connection.execute("SELECT autocomplete_count FROM entries WHERE content='git status'").fetchone()[0] == 2, "acceptance count lost on restart"
         command("--quit")
         assert process.wait(timeout=10) == 0
-        print("PASS production launcher: hidden capture, single-instance show/pause/resume/quit, process restart")
+        print("PASS production launcher: hidden capture, single-instance controls, persistent autocomplete counts with app running/closed")
     finally:
         if process and process.poll() is None:
             process.terminate()

@@ -10,15 +10,16 @@ import (
 )
 
 type Entry struct {
-	ID           int64  `json:"id"`
-	Content      string `json:"content"`
-	Hash         string `json:"hash"`
-	Category     string `json:"category"`
-	FirstCopied  int64  `json:"firstCopied"`
-	LastCopied   int64  `json:"lastCopied"`
-	CopyCount    int64  `json:"copyCount"`
-	RestoreCount int64  `json:"restoreCount"`
-	Pinned       bool   `json:"pinned"`
+	ID                int64  `json:"id"`
+	Content           string `json:"content"`
+	Hash              string `json:"hash"`
+	Category          string `json:"category"`
+	FirstCopied       int64  `json:"firstCopied"`
+	LastCopied        int64  `json:"lastCopied"`
+	CopyCount         int64  `json:"copyCount"`
+	RestoreCount      int64  `json:"restoreCount"`
+	AutocompleteCount int64  `json:"autocompleteCount"`
+	Pinned            bool   `json:"pinned"`
 }
 type Query struct {
 	Search   string `json:"search"`

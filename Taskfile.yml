@@ -10,6 +10,7 @@ tasks:
     cmds:
       - npm run build --prefix frontend
       - mkdir -p bin
+      - go build -trimpath -buildvcs=false -ldflags="-s -w" -o bin/cliprag-shell ./cmd/cliprag-shell
       - go build {{if eq .DEV "true"}}{{else}}-tags production{{end}} -trimpath -buildvcs=false -ldflags="-s -w" -o bin/cliprag ./cmd/cliprag
   run:
     desc: Run the built application
@@ -31,6 +32,10 @@ tasks:
       - '{{.WAILS}} tool package -name cliprag -format deb -config packaging/linux/nfpm.yaml -out bin'
     env:
       GOARCH: '{{ARCH}}'
+  test:shell:
+    desc: Test terminal completion in real Bash and Zsh (requires zsh)
+    cmds:
+      - ./scripts/test-shell.sh
   test:
     cmds:
       - go test ./...

@@ -13,6 +13,7 @@ No account, cloud service or AI required.
 - **Find clips quickly:** search, clickable type cards, All clips and Pinned views.
 - **Reuse exact text:** preserve formatting, expand long clips, and copy in one click.
 - **Stay organized:** automatic categories, usage counts and newest/most-used sorting.
+- **Complete as you type:** optional Bash/Zsh suggestions from saved commands, with local acceptance counts.
 - **Keep control:** pause capture, set history limits, and clear saved clips.
 
 Supports **GNOME 50 on Wayland** and **X11**. Other Wayland desktops, macOS and
@@ -58,6 +59,7 @@ npm ci --prefix frontend
 npm run build --prefix frontend
 mkdir -p bin
 go build -tags production -trimpath -buildvcs=false -o bin/cliprag ./cmd/cliprag
+go build -trimpath -buildvcs=false -o bin/cliprag-shell ./cmd/cliprag-shell
 ```
 
 On GNOME Wayland, install the bridge, then complete the logout/login step above:
@@ -85,11 +87,48 @@ Copy text in any app; new clips appear automatically while monitoring is active.
 | Quit | Open **⋯ → Quit ClipRAG** |
 
 Search, category and Pinned filters work together. **External copies** counts copies
-made in other apps; **Reused** counts copies made from ClipRAG.
+made in other apps; **Reused** counts copies made from ClipRAG. **Autocomplete uses**
+appears after a command is accepted from terminal suggestions. It counts acceptance,
+not execution, and stays on your device.
 Closing the window keeps capture running. Open ClipRAG again to bring it back.
 
 If **Bridge unavailable** appears on GNOME, complete the clipboard bridge setup above.
 To check the extension, run `gnome-extensions info cliprag@cliprag.local`.
+
+## Terminal autocomplete
+
+Included in **v0.2.0+**. Open ClipRAG once after upgrading, then enable it for your shell:
+
+```bash
+cliprag-shell install bash
+# Zsh users: cliprag-shell install zsh
+```
+
+For a source build, use `./bin/cliprag-shell` instead. Open a new terminal after setup.
+
+1. Copy a command such as `git checkout main` while ClipRAG is monitoring.
+2. At your Bash/Zsh prompt, type at least three characters, such as `git ch`.
+3. A matching command appears automatically as **faded text**.
+4. Press **Right Arrow** to accept it or **Esc** to dismiss it. **Enter runs only
+   what you have typed or accepted**.
+
+Use **Alt+/** for more matches; arrows or Tab select, Enter inserts, Esc cancels.
+Normal Tab completion stays intact. Suggestions work at the shell prompt, including
+vi insert mode, with the cursor at the end of the line. Matching uses an exact,
+case-sensitive prefix and works with ClipRAG closed.
+
+**Command clips only:** single-line Git, Linux, Docker, Kubernetes and common
+developer commands such as `go test` or `npm run dev`. Standalone URLs, ordinary
+text, SQL, JSON, multiline clips and detected secrets are excluded from suggestions.
+They remain available in clipboard history if eligible for capture.
+
+**Compatibility:** works with supported Bash/Zsh line editors in conventional
+terminals. **Warp’s native input editor is unsupported.** Browser fields, app
+editors and programs running inside the terminal are outside this integration.
+
+To remove it, run `cliprag-shell uninstall bash` (or `zsh`) and open a new terminal.
+See [shell setup and controls](integrations/shell/README.md) for current-session
+activation and pausing.
 
 ## Storage and privacy
 
@@ -133,6 +172,13 @@ Native UI checks require `xvfb`, `xclip` and `dbus-x11`:
 ```bash
 sudo apt-get install -y xvfb xclip dbus-x11
 ./scripts/test-desktop.sh
+```
+
+Terminal checks also require Zsh:
+
+```bash
+sudo apt-get install -y zsh
+./scripts/test-shell.sh
 ```
 
 See [GNOME bridge details](integrations/gnome-shell/README.md),

@@ -79,11 +79,17 @@ func (s *Store) migrate() error {
 	if err = tx.QueryRow("PRAGMA user_version").Scan(&version); err != nil {
 		return err
 	}
-	if version > 1 {
+	if version > 2 {
 		return errors.New("database schema newer than this ClipRAG version")
 	}
 	if version == 0 {
 		if _, err = tx.Exec(schemaV1); err != nil {
+			return err
+		}
+		version = 1
+	}
+	if version == 1 {
+		if _, err = tx.Exec(schemaV2); err != nil {
 			return err
 		}
 	}
@@ -91,11 +97,11 @@ func (s *Store) migrate() error {
 }
 func (s *Store) Close() error { return s.db.Close() }
 
-const columns = "id,content,hash,category,first_copied,last_copied,copy_count,restore_count,pinned"
+const columns = "id,content,hash,category,first_copied,last_copied,copy_count,restore_count,pinned,autocomplete_count"
 
 func scan(row interface{ Scan(...any) error }) (history.Entry, error) {
 	var e history.Entry
-	err := row.Scan(&e.ID, &e.Content, &e.Hash, &e.Category, &e.FirstCopied, &e.LastCopied, &e.CopyCount, &e.RestoreCount, &e.Pinned)
+	err := row.Scan(&e.ID, &e.Content, &e.Hash, &e.Category, &e.FirstCopied, &e.LastCopied, &e.CopyCount, &e.RestoreCount, &e.Pinned, &e.AutocompleteCount)
 	return e, err
 }
 func cleanup(ctx context.Context, tx *sql.Tx, cfg config.Settings, now int64) error {

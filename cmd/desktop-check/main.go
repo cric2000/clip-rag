@@ -42,7 +42,7 @@ func run() error {
 		return err
 	}
 	defer os.RemoveAll(dir)
-	store, err := storage.Open(filepath.Join(dir, "data", "history.db"))
+	store, err := storage.Open(filepath.Join(dir, "cliprag", "history.db"))
 	if err != nil {
 		return err
 	}
@@ -89,7 +89,7 @@ func run() error {
 	result := <-outcome
 	// Verify the same database reopens with the exact saved contents and pins.
 	store.Close()
-	reopened, e := storage.Open(filepath.Join(dir, "data", "history.db"))
+	reopened, e := storage.Open(filepath.Join(dir, "cliprag", "history.db"))
 	if e != nil {
 		return e
 	}
@@ -181,6 +181,16 @@ func exercise(win *application.WebviewWindow, svc *app.Service, reports <-chan s
 		return fmt.Errorf("category/pinning: %w", err)
 	}
 	fmt.Println("PASS category counts, filters, pinning, frontend update events")
+	accepted := exec.CommandContext(ctx, "./bin/cliprag-shell", "record-use")
+	accepted.Env = append(os.Environ(), "XDG_DATA_HOME="+svc.Status().DataDir)
+	accepted.Stdin = strings.NewReader("git status")
+	if output, err := accepted.CombinedOutput(); err != nil {
+		return fmt.Errorf("autocomplete acceptance: %s: %w", output, err)
+	}
+	if err := js(`await wait(()=>Array.from(document.querySelectorAll('article')).some(a=>a.querySelector('pre').textContent==='git status'&&a.textContent.includes('Autocomplete uses 1')))`); err != nil {
+		return fmt.Errorf("live autocomplete count: %w", err)
+	}
+	fmt.Println("PASS accepted autocomplete usage updates the open UI through an external helper")
 	if err := js(`const input=document.querySelector('[aria-label="Search clipboard history"]');Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(input,'docker');input.dispatchEvent(new Event('input',{bubbles:true}));await wait(()=>document.querySelectorAll('article').length===1&&document.querySelector('article pre').textContent==='docker ps');Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(input,'');input.dispatchEvent(new Event('input',{bubbles:true}));await wait(()=>document.querySelectorAll('article').length===5);type('SQL');await wait(()=>document.querySelectorAll('article').length===1);document.querySelector('[aria-label="Copy SQL entry"]').click();await wait(()=>document.querySelector('.toast')?.textContent==='Copied to clipboard')`); err != nil {
 		return fmt.Errorf("search/restore: %w", err)
 	}

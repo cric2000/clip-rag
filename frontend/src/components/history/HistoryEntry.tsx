@@ -9,6 +9,7 @@ import {
   Clock3,
   RotateCcw,
   LoaderCircle,
+  Terminal,
 } from "lucide-react";
 import type { Entry } from "../../types";
 import { categoryClass, categoryIcons } from "../../lib/categories";
@@ -105,6 +106,15 @@ export function HistoryEntry({
               Reused {entry.restoreCount}{" "}
               {entry.restoreCount === 1 ? "time" : "times"}
             </span>
+            {entry.autocompleteCount > 0 && (
+              <>
+                <span className="separator">·</span>
+                <Terminal size={12} />
+                <span title="Times accepted from terminal autocomplete. Acceptance does not mean the command was executed.">
+                  Autocomplete uses {entry.autocompleteCount}
+                </span>
+              </>
+            )}
           </span>
           {large && (
             <button

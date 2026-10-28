@@ -19,3 +19,8 @@ CREATE INDEX entries_used ON entries(copy_count DESC, last_copied DESC, id DESC)
 CREATE TABLE settings (id INTEGER PRIMARY KEY CHECK(id=1), value TEXT NOT NULL);
 PRAGMA user_version = 1;
 `
+
+const schemaV2 = `
+ALTER TABLE entries ADD COLUMN autocomplete_count INTEGER NOT NULL DEFAULT 0 CHECK(autocomplete_count >= 0);
+PRAGMA user_version = 2;
+`

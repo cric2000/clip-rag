@@ -1532,3 +1532,33 @@ pre {
     font-size: 13px;
   }
 }
+
+.terminal-setup {
+  margin-top: 16px;
+  padding: 12px;
+  border: 1px solid #44364f;
+  border-radius: 8px;
+  background: #1b1721;
+  font-size: 13px;
+  color: #bbacc8;
+}
+.terminal-setup summary {
+  cursor: pointer;
+  color: #d7c1eb;
+}
+.terminal-setup p {
+  margin-top: 10px;
+  line-height: 1.7;
+}
+.terminal-setup > code {
+  display: block;
+  margin-top: 8px;
+  padding: 9px 11px;
+  border-radius: 6px;
+  background: #121015;
+  overflow-wrap: anywhere;
+  font:
+    12px "JetBrains Mono",
+    monospace;
+  color: #e2c9f4;
+}

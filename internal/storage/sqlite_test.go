@@ -133,7 +133,7 @@ func TestMigrationPersistencePermissions(t *testing.T) {
 	}
 	var version int
 	s.db.QueryRow("PRAGMA user_version").Scan(&version)
-	if version != 1 {
+	if version != 2 {
 		t.Fatal(version)
 	}
 	s.Close()
@@ -199,7 +199,7 @@ func TestTransactionsAndConcurrentDedup(t *testing.T) {
 }
 func TestRejectNewerSchema(t *testing.T) {
 	s := openTest(t)
-	s.db.Exec("PRAGMA user_version=2")
+	s.db.Exec("PRAGMA user_version=3")
 	if s.migrate() == nil {
 		t.Fatal("accepted incompatible schema")
 	}

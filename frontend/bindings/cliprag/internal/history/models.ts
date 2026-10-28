@@ -10,6 +10,7 @@ export interface Entry {
     "lastCopied": number;
     "copyCount": number;
     "restoreCount": number;
+    "autocompleteCount": number;
     "pinned": boolean;
 }
 

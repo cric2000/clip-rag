@@ -46,14 +46,22 @@ func (e *Engine) Start(ctx context.Context) error {
 	child, cancel := context.WithCancel(ctx)
 	e.cancel = cancel
 	e.done = make(chan struct{})
+	dataVersion, _ := e.store.DataVersion(child)
 	go func() {
 		defer close(e.done)
 		ticker := time.NewTicker(time.Hour)
 		defer ticker.Stop()
+		usageTicker := time.NewTicker(500 * time.Millisecond)
+		defer usageTicker.Stop()
 		for {
 			select {
 			case <-child.Done():
 				return
+			case <-usageTicker.C:
+				if current, err := e.store.DataVersion(child); err == nil && current != dataVersion {
+					dataVersion = current
+					e.changed()
+				}
 			case q := <-e.queue:
 				if q.epoch == e.epoch.Load() {
 					e.captureAt(child, q.event, q.epoch)

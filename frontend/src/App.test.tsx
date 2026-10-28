@@ -35,6 +35,7 @@ const item: Entry = {
   lastCopied: Date.now(),
   copyCount: 5,
   restoreCount: 2,
+  autocompleteCount: 3,
   pinned: false,
 };
 const cfg: Settings = {
@@ -83,6 +84,10 @@ describe("clipboard dashboard", () => {
       "Times you used Copy on this saved clip",
     );
     expect(screen.getByText("Monitoring")).toBeVisible();
+    expect(screen.getByText("Autocomplete uses 3")).toHaveAttribute(
+      "title",
+      "Times accepted from terminal autocomplete. Acceptance does not mean the command was executed.",
+    );
   });
   it("filters by type and sorts within that category", async () => {
     await ready();
@@ -234,6 +239,10 @@ describe("clipboard dashboard", () => {
   it("edits settings and confirms clearing all history", async () => {
     await ready();
     await userEvent.click(screen.getByLabelText("Settings"));
+    await userEvent.click(
+      screen.getByText("Terminal autocomplete · Bash & Zsh"),
+    );
+    expect(screen.getByText("cliprag-shell install bash")).toBeVisible();
     fireEvent.change(screen.getByLabelText("Retention in days"), {
       target: { value: "14" },
     });

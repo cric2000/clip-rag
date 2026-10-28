@@ -171,6 +171,23 @@ export function SettingsDialog({
             <code>{dataDir}</code>
           </div>
         </div>
+        <details className="terminal-setup">
+          <summary>Terminal autocomplete · Bash &amp; Zsh</summary>
+          <p>Enable once, then open a new terminal:</p>
+          <code>cliprag-shell install bash</code>
+          <p>
+            Use <code>zsh</code> instead of <code>bash</code> for Zsh.
+          </p>
+          <p>
+            Type at least 3 characters. A saved match appears as faded text.
+            Press <kbd>→</kbd> to accept or <kbd>Esc</kbd> to dismiss. Enter runs
+            only the text you’ve typed or accepted.
+          </p>
+          <p>
+            For more matches, press <kbd>Alt /</kbd>. Choose with arrows or Tab;
+            Enter inserts your selection.
+          </p>
+        </details>
         {error && (
           <p role="alert" className="form-error">
             <AlertCircle size={15} />

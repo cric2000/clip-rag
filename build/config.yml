@@ -3,7 +3,7 @@ info:
   productName: ClipRAG
   productIdentifier: io.github.cliprag
   description: Your developer clipboard memory.
-  version: 0.1.0
+  version: 0.2.0
 dev_mode:
   root_path: .
   log_level: warn
