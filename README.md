@@ -14,6 +14,7 @@ No account, cloud service or AI required.
 - **Reuse exact text:** preserve formatting, expand long clips, and copy in one click.
 - **Stay organized:** automatic categories, usage counts and newest/most-used sorting.
 - **Complete as you type:** optional Bash/Zsh suggestions from saved commands, with local acceptance counts.
+- **Reuse text in your browser:** optional Chrome-family autocomplete for URLs, prose and snippets (v0.3.0+).
 - **Keep control:** pause capture, set history limits, and clear saved clips.
 
 Supports **GNOME 50 on Wayland** and **X11**. Other Wayland desktops, macOS and
@@ -24,6 +25,8 @@ Windows are not supported yet.
 For **Ubuntu 26.04 · AMD64 (64-bit Intel/AMD)**. No Go or Node.js installation needed.
 
 [**Download ClipRAG (.deb)**](https://github.com/cric2000/clip-rag/releases/latest/download/cliprag.deb)
+
+Browser autocomplete requires **v0.3.0+**; the v0.2.0 release includes terminal autocomplete only.
 
 After downloading, open a terminal in the download folder and install:
 
@@ -51,7 +54,7 @@ cliprag
 <details>
 <summary>Build and run from source instead</summary>
 
-Requires **Go 1.26.8+**, **Node.js 24+** and npm. From the project root:
+Requires **Go 1.26.8+**, **Node.js 24+**, npm and Python 3. From the project root:
 
 ```bash
 sudo apt-get install -y build-essential pkg-config libgtk-4-dev libwebkitgtk-6.0-dev
@@ -60,6 +63,8 @@ npm run build --prefix frontend
 mkdir -p bin
 go build -tags production -trimpath -buildvcs=false -o bin/cliprag ./cmd/cliprag
 go build -trimpath -buildvcs=false -o bin/cliprag-shell ./cmd/cliprag-shell
+go build -trimpath -buildvcs=false -o bin/cliprag-browser ./cmd/cliprag-browser
+python3 scripts/build-browser.py
 ```
 
 On GNOME Wayland, install the bridge, then complete the logout/login step above:
@@ -88,7 +93,7 @@ Copy text in any app; new clips appear automatically while monitoring is active.
 
 Search, category and Pinned filters work together. **External copies** counts copies
 made in other apps; **Reused** counts copies made from ClipRAG. **Autocomplete uses**
-appears after a command is accepted from terminal suggestions. It counts acceptance,
+appears after a clip is accepted from terminal or browser suggestions. It counts acceptance,
 not execution, and stays on your device.
 Closing the window keeps capture running. Open ClipRAG again to bring it back.
 
@@ -123,12 +128,48 @@ text, SQL, JSON, multiline clips and detected secrets are excluded from suggesti
 They remain available in clipboard history if eligible for capture.
 
 **Compatibility:** works with supported Bash/Zsh line editors in conventional
-terminals. **Warp’s native input editor is unsupported.** Browser fields, app
-editors and programs running inside the terminal are outside this integration.
+terminals. **Warp’s native input editor is unsupported.** App editors and programs
+running inside the terminal are outside this integration. Browser fields use the
+separate extension below.
 
 To remove it, run `cliprag-shell uninstall bash` (or `zsh`) and open a new terminal.
 See [shell setup and controls](integrations/shell/README.md) for current-session
 activation and pausing.
+
+## Browser autocomplete (v0.3.0+)
+
+The v0.2.0 `.deb` does not include this feature. Use a v0.3.0+ package or the
+source build above. Open ClipRAG once and copy some text before testing suggestions.
+
+Register the bridge and use the extension folder for your installation:
+
+| Installation | Setup command | Extension folder |
+| --- | --- | --- |
+| v0.3.0+ `.deb` | `cliprag-browser install chrome` | `/usr/share/cliprag/browser-extension` |
+| Source build (from project root) | `./bin/cliprag-browser install chrome` | `bin/cliprag-browser-extension` |
+
+1. Run the setup command above as your normal user, without `sudo`. Replace
+   `chrome` with `chromium`, `brave`, or `edge` for those browsers.
+2. Open `chrome://extensions`, enable **Developer mode**, choose **Load unpacked**,
+   and select the extension folder above.
+3. Open a website, choose **Enable on this website** in ClipRAG's toolbar popup,
+   and approve access. Enable each website once; your choice is remembered.
+4. Type at least three characters from the beginning of a saved clip for automatic
+   matches. **Tab/Enter** inserts; **Esc** closes.
+
+All saved text categories are supported: URLs, normal text, commands, code,
+SQL, JSON and multiline clips in multiline fields. Password/payment fields
+are excluded. Matching stays local, and accepting does not submit the form.
+For saved URLs in the address bar, type **`clip` then Space**, followed by a domain
+such as `github.com` (`https://` is optional). Enter opens the first match.
+
+<img src="integrations/browser/screenshot.png" alt="ClipRAG suggesting saved text in a browser field" width="700" />
+
+See [browser setup and controls](integrations/browser/README.md) for installed-package
+paths, custom data locations, compatibility and removal.
+After updating the package or rebuilding, reload the extension on its Extensions
+card and refresh older website tabs once. Snap/Flatpak browser packages may not
+support the native bridge; use a native browser package for this version.
 
 ## Storage and privacy
 
@@ -152,7 +193,7 @@ not perfect—pause capture before copying sensitive information.
 
 <img src="packaging/linux/compact.png" alt="ClipRAG category cards and history in a compact window" width="640" />
 
-Screenshots use sample clipboard content from the native app’s isolated test run.
+Screenshots use sample clipboard content from isolated app and browser tests.
 
 </details>
 
@@ -179,6 +220,12 @@ Terminal checks also require Zsh:
 ```bash
 sudo apt-get install -y zsh
 ./scripts/test-shell.sh
+```
+
+Browser checks use an installed native Google Chrome and a separate test profile:
+
+```bash
+./scripts/test-browser.sh
 ```
 
 See [GNOME bridge details](integrations/gnome-shell/README.md),

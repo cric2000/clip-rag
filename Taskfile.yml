@@ -11,6 +11,8 @@ tasks:
       - npm run build --prefix frontend
       - mkdir -p bin
       - go build -trimpath -buildvcs=false -ldflags="-s -w" -o bin/cliprag-shell ./cmd/cliprag-shell
+      - go build -trimpath -buildvcs=false -ldflags="-s -w" -o bin/cliprag-browser ./cmd/cliprag-browser
+      - python3 scripts/build-browser.py
       - go build {{if eq .DEV "true"}}{{else}}-tags production{{end}} -trimpath -buildvcs=false -ldflags="-s -w" -o bin/cliprag ./cmd/cliprag
   run:
     desc: Run the built application
@@ -36,6 +38,10 @@ tasks:
     desc: Test terminal completion in real Bash and Zsh (requires zsh)
     cmds:
       - ./scripts/test-shell.sh
+  test:browser:
+    desc: Test browser autocomplete in an isolated Google Chrome profile
+    cmds:
+      - ./scripts/test-browser.sh
   test:
     cmds:
       - go test ./...

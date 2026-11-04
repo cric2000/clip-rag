@@ -110,7 +110,7 @@ export function HistoryEntry({
               <>
                 <span className="separator">·</span>
                 <Terminal size={12} />
-                <span title="Times accepted from terminal autocomplete. Acceptance does not mean the command was executed.">
+                <span title="Times accepted from terminal or browser autocomplete. Acceptance does not mean the text was submitted or a command was executed.">
                   Autocomplete uses {entry.autocompleteCount}
                 </span>
               </>

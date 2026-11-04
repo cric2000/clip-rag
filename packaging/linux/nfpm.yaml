@@ -1,7 +1,7 @@
 name: cliprag
 arch: ${GOARCH}
 platform: linux
-version: 0.2.0
+version: 0.3.0
 section: utils
 priority: optional
 maintainer: ClipRAG maintainers <maintainers@cliprag.local>
@@ -15,6 +15,16 @@ contents:
     dst: /usr/bin/cliprag-shell
     file_info:
       mode: 0755
+  - src: ./bin/cliprag-browser
+    dst: /usr/bin/cliprag-browser
+    file_info:
+      mode: 0755
+  - src: ./bin/cliprag-browser-extension/*
+    dst: /usr/share/cliprag/browser-extension/
+    file_info:
+      mode: 0644
+  - src: ./integrations/browser/README.md
+    dst: /usr/share/doc/cliprag/browser-autocomplete.md
   - src: ./integrations/shell/README.md
     dst: /usr/share/doc/cliprag/shell-completion.md
   - src: ./packaging/linux/cliprag.desktop

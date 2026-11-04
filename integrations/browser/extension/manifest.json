@@ -1,0 +1,33 @@
+{
+  "manifest_version": 3,
+  "name": "ClipRAG \u2014 Clipboard autocomplete",
+  "version": "0.3.0",
+  "description": "Local suggestions from saved clipboard text, URLs and snippets on websites you enable.",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAru3uYPiRPugWo5phkykD16kwqOn5g7InctclC9TkPXt7TOgTSRZC1JYuRGHHZtrvzomCem0H2f6fcWrVWlQ22tKOhrCR62Y2arKEmXLfW6UNAZO021XqPdUW2/dItmrrwqQmCXLHp1+ov6Re2UwJlBnaHrbMlwXx+ZgP0mauaHpDfN+JYHPDGwo/IWBdFyNY11skpEIt/6YIRZJ0+yeVHU2D2UM+RycDh2vbATGnlFfGoSO//hKzxvc+AmOgx0qTwcVMkrYXhGeeiQ/07bIhhYIANSf700hdsciKRAWd5/W0+5QU36bUWS1X6YXqbngNf1sr7IlsgD6C8eHk2T4tlQIDAQAB",
+  "permissions": [
+    "nativeMessaging",
+    "storage",
+    "activeTab",
+    "scripting"
+  ],
+  "optional_host_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "ClipRAG autocomplete"
+  },
+  "omnibox": {
+    "keyword": "clip"
+  },
+  "incognito": "not_allowed",
+  "icons": {
+    "16": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
+  }
+}

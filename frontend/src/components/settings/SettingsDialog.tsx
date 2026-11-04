@@ -180,12 +180,32 @@ export function SettingsDialog({
           </p>
           <p>
             Type at least 3 characters. A saved match appears as faded text.
-            Press <kbd>→</kbd> to accept or <kbd>Esc</kbd> to dismiss. Enter runs
-            only the text you’ve typed or accepted.
+            Press <kbd>→</kbd> to accept or <kbd>Esc</kbd> to dismiss. Enter
+            runs only the text you’ve typed or accepted.
           </p>
           <p>
             For more matches, press <kbd>Alt /</kbd>. Choose with arrows or Tab;
             Enter inserts your selection.
+          </p>
+        </details>
+        <details className="terminal-setup">
+          <summary>Browser autocomplete · Chrome &amp; Chromium</summary>
+          <p>Install the local bridge once:</p>
+          <code>cliprag-browser install chrome</code>
+          <p>
+            Use <code>chromium</code>, <code>brave</code>, or <code>edge</code>
+            instead for those browsers. In Extensions, enable Developer mode and
+            load the unpacked folder at{" "}
+            <code>/usr/share/cliprag/browser-extension</code>. Source builds use{" "}
+            <code>bin/cliprag-browser-extension</code>.
+          </p>
+          <p>
+            Click ClipRAG’s browser icon to enable a website. Type 3 characters
+            for saved URLs, text or snippets; Tab or Enter inserts a match.
+            Password and payment fields are excluded.
+          </p>
+          <p>
+            For saved URLs in the address bar, type <kbd>clip</kbd> then Space.
           </p>
         </details>
         {error && (

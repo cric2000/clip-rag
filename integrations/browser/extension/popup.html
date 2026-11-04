@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>ClipRAG autocomplete</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header>
+      <img src="icon.png" width="36" height="36" alt="" />
+      <div>
+        <h1>ClipRAG</h1>
+        <p>Your clipboard, as you type.</p>
+      </div>
+    </header>
+    <section class="connection">
+      <i id="indicator"></i
+      ><span id="status" role="status">Connecting to local history…</span>
+    </section>
+    <section>
+      <h2>This website</h2>
+      <p id="site">Checking current tab…</p>
+      <button id="site-toggle" disabled>Enable on this website</button>
+      <p class="note">
+        Suggestions appear only on websites you enable. Password and payment
+        fields are excluded.
+      </p>
+    </section>
+    <section class="pause">
+      <label for="pause">Pause all browser suggestions</label
+      ><input id="pause" type="checkbox" role="switch" />
+    </section>
+    <footer>
+      <strong>All saved text types</strong>
+      <p>
+        URLs, text, commands, code, JSON and SQL. Multiline clips work in
+        multiline fields. Type at least 3 characters from the start of a saved
+        clip to see matches.
+      </p>
+      <p>
+        Address bar: <kbd>clip</kbd>, Space, then a saved domain such as
+        <kbd>github.com</kbd>.
+      </p>
+      <small
+        >Matching stays on this device. Nothing is submitted
+        automatically.</small
+      >
+    </footer>
+    <script src="popup.js"></script>
+  </body>
+</html>

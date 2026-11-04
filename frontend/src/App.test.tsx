@@ -86,7 +86,7 @@ describe("clipboard dashboard", () => {
     expect(screen.getByText("Monitoring")).toBeVisible();
     expect(screen.getByText("Autocomplete uses 3")).toHaveAttribute(
       "title",
-      "Times accepted from terminal autocomplete. Acceptance does not mean the command was executed.",
+      "Times accepted from terminal or browser autocomplete. Acceptance does not mean the text was submitted or a command was executed.",
     );
   });
   it("filters by type and sorts within that category", async () => {
